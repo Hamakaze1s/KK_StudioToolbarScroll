@@ -86,7 +86,7 @@ namespace KK_StudioToolbarScroll
         private static void LogState()
         {
             ToolbarScroller s = Scroller;
-            string state = "scroll " + s.Scroll + "/" + s.MaxScroll + ", window " + s.WindowRows + " rows, overflow " + s.Overflowing + " (rows: pinned<=" + s.PinnedMax + ", usable<=" + s.TopRow + ", content<=" + s.MaxRow + ")";
+            string state = "scroll " + s.Scroll + "/" + s.MaxScroll + ", window " + s.WindowRows + " rows, overflow " + s.Overflowing + " (rows: pinned<=" + s.PinnedMax + ", usable<=" + s.TopRow + ", content<=" + s.MaxRow + "; toolbar canvas " + s.OwnCanvas + ", covered by " + s.CoveredBy + ")";
             if (state == _lastState) return;
             _lastState = state;
             Trace(state);

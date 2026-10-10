@@ -58,6 +58,9 @@ namespace KK_StudioToolbarScroll.Core
         /// <summary>Diagnostics: highest usable row, highest pinned row, highest row of any scrollable button.</summary>
         public int TopRow, PinnedMax, MaxRow;
 
+        /// <summary>Diagnostics: the toolbar canvas, and which canvas covered the first covered row (or "-").</summary>
+        public string OwnCanvas = "-", CoveredBy = "-";
+
         public event Action Changed;
 
         public void ScrollBy(int rows)
@@ -287,6 +290,8 @@ namespace KK_StudioToolbarScroll.Core
             Canvas own = reference.GetComponentInParent<Canvas>();
             if (es == null || own == null) return to + 1;
             Canvas root = own.rootCanvas;
+            OwnCanvas = Describe(root);
+            CoveredBy = "-";
             if (_pointer == null) _pointer = new PointerEventData(es);
 
             for (int r = from; r <= to; r++)
@@ -308,9 +313,16 @@ namespace KK_StudioToolbarScroll.Core
                 GameObject go = _hits[i].gameObject;
                 Canvas c = go != null ? go.GetComponentInParent<Canvas>() : null;
                 if (c == null) continue;
-                return c.rootCanvas != toolbarRoot;
+                bool covered = c.rootCanvas != toolbarRoot;
+                if (covered && CoveredBy == "-") CoveredBy = Describe(c.rootCanvas) + " via " + go.name;
+                return covered;
             }
             return false;
+        }
+
+        private static string Describe(Canvas c)
+        {
+            return c.name + "#" + c.sortingOrder + "/" + c.renderMode;
         }
 
         private static RectTransform ActiveRect(ToolbarControlBase b)
