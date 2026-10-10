@@ -143,8 +143,36 @@ namespace KK_StudioToolbarScroll.Core
         {
             if (_failed || _reference == null) return;
             float scale = _reference.lossyScale.y;
+            WatchCanvasOrder();
             if (Screen.width != _lastScreenW || Screen.height != _lastScreenH || !Mathf.Approximately(scale, _lastScale))
                 Apply();
+        }
+
+        private Canvas _watched;
+        private int _watchedOrder = int.MinValue;
+
+        /// <summary>
+        /// Something other than this plugin has been seen changing the toolbar canvas' sorting order (it then draws
+        /// over the main menu). Record when, and what every root canvas looks like, then recompute.
+        /// </summary>
+        private void WatchCanvasOrder()
+        {
+            if (_watched == null)
+            {
+                Canvas c = _reference.GetComponentInParent<Canvas>();
+                _watched = c != null ? c.rootCanvas : null;
+                if (_watched != null) _watchedOrder = _watched.sortingOrder;
+                return;
+            }
+            int now = _watched.sortingOrder;
+            if (now == _watchedOrder) return;
+
+            var sb = new System.Text.StringBuilder();
+            foreach (Canvas c in UnityEngine.Object.FindObjectsOfType<Canvas>())
+                if (c.isRootCanvas && c.isActiveAndEnabled) sb.Append(c.name).Append('#').Append(c.sortingOrder).Append("; ");
+            Plugin.Trace("toolbar canvas sorting order " + _watchedOrder + " -> " + now + ". Root canvases: " + sb);
+            _watchedOrder = now;
+            Apply();
         }
 
         private void Compute()
