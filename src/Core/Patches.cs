@@ -53,14 +53,38 @@ namespace KK_StudioToolbarScroll.Core
             return null;
         }
 
+        private static int _unplacedBefore;
+
         private static void BeforeUpdate()
         {
             _scroller.Clear();
+            _unplacedBefore = CountUnplaced();
+        }
+
+        /// <summary>Buttons without a saved grid position. A jump here means KKAPI dropped positions during a relayout.</summary>
+        private static int CountUnplaced()
+        {
+            int n = 0;
+            ToolbarControlBase[] all = ToolbarManager.GetAllButtons(true);
+            for (int i = 0; i < all.Length; i++)
+                if (!all[i].DesiredPosition.HasValue) n++;
+            return n;
         }
 
         // Finalizer so offsets are re-applied even if UpdateInterface throws
         private static void AfterUpdate()
         {
+            try
+            {
+                int after = CountUnplaced();
+                if (after != _unplacedBefore)
+                    Plugin.Trace("relayout: buttons without saved position " + _unplacedBefore + " -> " + after
+                        + ", screen " + Screen.width + "x" + Screen.height);
+            }
+            catch (Exception e)
+            {
+                Plugin.Log.LogWarning("relayout diagnostics failed: " + e.Message);
+            }
             _scroller.Apply();
         }
 
