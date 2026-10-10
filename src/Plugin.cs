@@ -17,17 +17,20 @@ namespace KK_StudioToolbarScroll
     {
         public const string Guid = "Hamakaze.KK_StudioToolbarScroll";
         public const string Name = "KK_StudioToolbarScroll";
-        public const string Version = "0.0.1";
+        public const string Version = "0.1.0";
 
         internal static ManualLogSource Log;
         internal static ToolbarScroller Scroller;
 
         private static string _lastState;
 
-        /// <summary>Info-level line with a wall-clock time, so it can be matched against a crash report's timestamp.</summary>
+        /// <summary>
+        /// Debug-level line with a wall-clock time, so it can be matched against a crash report's timestamp.
+        /// Shown when the BepInEx log level includes Debug.
+        /// </summary>
         internal static void Trace(string message)
         {
-            Log.LogInfo("[" + DateTime.Now.ToString("HH:mm:ss.fff") + "] " + message);
+            Log.LogDebug("[" + DateTime.Now.ToString("HH:mm:ss.fff") + "] " + message);
         }
 
         private ConfigEntry<int> _fakeButtons;
@@ -72,7 +75,7 @@ namespace KK_StudioToolbarScroll
             _fakeButtons.SettingChanged += (s, e) => _debugButtons.SetCount(_fakeButtons.Value);
             _debugButtons.SetCount(_fakeButtons.Value);
 
-            Trace(Name + " " + Version + " loaded, fake buttons " + _fakeButtons.Value);
+            Log.LogInfo(Name + " " + Version + " loaded");
         }
 
         void Update()

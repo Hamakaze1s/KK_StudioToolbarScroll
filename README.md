@@ -4,7 +4,7 @@
 
 A CharaStudio plugin for Koikatu that keeps the studio's left toolbar usable when too many plugins have added buttons to it. Buttons that no longer fit on the screen are reached with ▲▼ buttons instead of being lost off the top edge.
 
-> **Status:** in development (0.0.x), not released yet. Tested in game with KKAPI 1.45.1 and 1.48.1.
+> **Status:** 0.1.0, first release. Tested in game with KKAPI 1.45.1 and 1.48.1.
 
 <img src="docs/images/toolbar-scroll.png" width="200" alt="The toolbar with more buttons than fit: first page (left), scrolled to the top (right)">
 
@@ -41,6 +41,10 @@ The studio's left toolbar with more buttons than fit. Left: first page. Right: s
 
 - **Avoid the toolbar's Edit Mode** (Option button, right-click) when you can. We have not found any problem caused by this plugin there, but KKAPI 1.46 and later place buttons that are normally hidden while Edit Mode is on, which can push a vanilla button such as Undo one column to the right (this happens without this plugin too). We can't rule out new conflicts with future KKAPI versions. If the layout gets mixed up, *Rearrange buttons* in the same menu restores it.
 - **Please don't drag the game's own buttons** (Undo, Redo, Camera, ...). The plugin assumes they sit at the bottom. KKAPI fills the cells they leave behind with other buttons, and the line between fixed and scrolling rows moves with them.
+
+## Troubleshooting
+
+The plugin writes what it does (scrolling, drags, layout changes) to the BepInEx log at *Debug* level, with timestamps. To include it, set `[Logging.Disk] Enabled = true` and add `Debug` to `LogLevels` in `BepInEx/config/BepInEx.cfg`, then look at `BepInEx/LogOutput.log`.
 
 ## Build from source
 

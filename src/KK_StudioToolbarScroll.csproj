@@ -10,6 +10,8 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>..\bin\$(Configuration)</OutputPath>
     <Nullable>disable</Nullable>
+    <!-- Keep the local checkout path out of the embedded debug info -->
+    <PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..'))=KK_StudioToolbarScroll</PathMap>
     <!-- Game install used for the KKAPI reference and post-build copy: pass -p:GameDir=... or put it in GameDir.props (git-ignored) -->
     <GameDir Condition="'$(GameDir)' == '' And Exists('$(MSBuildThisFileDirectory)..\GameDir.props')">$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)..\GameDir.props').Trim())</GameDir>
     <CopyToGame Condition="'$(CopyToGame)' == ''">true</CopyToGame>
