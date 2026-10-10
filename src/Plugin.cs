@@ -4,6 +4,7 @@ using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using KK_StudioToolbarScroll.Core;
+using KK_StudioToolbarScroll.UI;
 using KKAPI.Studio;
 using UnityEngine;
 
@@ -33,6 +34,7 @@ namespace KK_StudioToolbarScroll
         private ConfigEntry<KeyboardShortcut> _debugUp;
         private ConfigEntry<KeyboardShortcut> _debugDown;
         private DebugButtons _debugButtons;
+        private ScrollDivider _divider;
 
         void Awake()
         {
@@ -52,6 +54,7 @@ namespace KK_StudioToolbarScroll
             {
                 Scroller = scroller;
                 scroller.Changed += LogState;
+                _divider = new ScrollDivider(scroller);
                 Trace("KKAPI toolbar hooks installed");
             }
 

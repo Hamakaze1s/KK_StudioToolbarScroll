@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using KKAPI.Studio.UI.Toolbars;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace KK_StudioToolbarScroll.Core
 {
@@ -29,6 +30,8 @@ namespace KK_StudioToolbarScroll.Core
         private readonly List<RectTransform> _scrollable = new List<RectTransform>();
         private readonly List<int> _scrollableRows = new List<int>();
         private readonly Vector3[] _corners = new Vector3[4];
+        private readonly List<RaycastResult> _hits = new List<RaycastResult>();
+        private PointerEventData _pointer;
 
         private RectTransform _dragged;
         private RectTransform _reference;
@@ -45,6 +48,12 @@ namespace KK_StudioToolbarScroll.Core
         public int MaxScroll { get; private set; }
         /// <summary>Rows of scrollable buttons that are visible at once.</summary>
         public int WindowRows { get; private set; }
+
+        /// <summary>Screen-pixel line between the pinned rows and the scrolling rows; valid while <see cref="Overflowing"/>.</summary>
+        public float DividerLeft, DividerY, DividerWidth;
+
+        /// <summary>Diagnostics: highest usable row, highest pinned row, highest row of any scrollable button.</summary>
+        public int TopRow, PinnedMax, MaxRow;
 
         public event Action Changed;
 
@@ -154,10 +163,12 @@ namespace KK_StudioToolbarScroll.Core
             if (reference == null) return;
 
             int pinnedMax = 0;
+            float minX = float.MaxValue;
             for (int i = 0; i < buttons.Length; i++)
             {
                 RectTransform rt = ActiveRect(buttons[i]);
                 if (rt == null) continue;
+                if (rt.anchoredPosition.x < minX) minX = rt.anchoredPosition.x;
                 int row = Mathf.RoundToInt((rt.anchoredPosition.y - refY) / RowStep);
                 if (IsVanilla(buttons[i]))
                 {
@@ -196,6 +207,17 @@ namespace KK_StudioToolbarScroll.Core
             float rowPx = RowStep * _lastScale;
             int topRow = Mathf.FloorToInt((Screen.height + ScreenMargin - refTop) / rowPx);
 
+            // Cell centres in screen pixels, for the occlusion scan and the divider.
+            float refW = _corners[2].x - _corners[0].x;
+            float refCenterX = (_corners[0].x + _corners[2].x) * 0.5f;
+            float refCenterY = (_corners[0].y + _corners[2].y) * 0.5f;
+            float col0X = refCenterX + (minX - reference.anchoredPosition.x) * _lastScale;
+            float col1X = col0X + RowStep * _lastScale;
+            topRow = Math.Min(topRow, FirstCoveredRow(reference, pinnedMax + 1, topRow, col0X, col1X, refCenterY, rowPx) - 1);
+
+            TopRow = topRow;
+            PinnedMax = pinnedMax;
+            MaxRow = maxRow;
             if (maxRow <= topRow) { _scroll = 0; return; }
 
             int windowTop = topRow - ReserveRows;
@@ -207,6 +229,9 @@ namespace KK_StudioToolbarScroll.Core
                 return;
             }
             Overflowing = true;
+            DividerLeft = col0X - refW * 0.5f;
+            DividerWidth = (col1X - col0X) + refW;
+            DividerY = refTop + pinnedMax * rowPx + (RowStep - refW / _lastScale) * 0.5f * _lastScale;
             MaxScroll = Math.Max(0, maxRow - pinnedMax - WindowRows);
             _scroll = Mathf.Clamp(_scroll, 0, MaxScroll);
 
@@ -231,6 +256,43 @@ namespace KK_StudioToolbarScroll.Core
                 }
                 _applied.Add(entry);
             }
+        }
+
+        /// <summary>
+        /// First row in [from, to] where a cell of either column is covered by UI from another root canvas (the
+        /// studio's main menu is drawn above the toolbar). Returns to + 1 if none. Same-canvas windows don't count,
+        /// they come and go. If the very first row is covered it is a modal overlay, not the menu: ignore it all.
+        /// </summary>
+        private int FirstCoveredRow(RectTransform reference, int from, int to, float col0X, float col1X, float refCenterY, float rowPx)
+        {
+            EventSystem es = EventSystem.current;
+            Canvas own = reference.GetComponentInParent<Canvas>();
+            if (es == null || own == null) return to + 1;
+            Canvas root = own.rootCanvas;
+            if (_pointer == null) _pointer = new PointerEventData(es);
+
+            for (int r = from; r <= to; r++)
+            {
+                float y = refCenterY + r * rowPx;
+                if (IsCovered(es, root, col0X, y) || IsCovered(es, root, col1X, y))
+                    return r == from ? to + 1 : r;
+            }
+            return to + 1;
+        }
+
+        private bool IsCovered(EventSystem es, Canvas toolbarRoot, float x, float y)
+        {
+            _pointer.position = new Vector2(x, y);
+            _hits.Clear();
+            es.RaycastAll(_pointer, _hits);
+            for (int i = 0; i < _hits.Count; i++)
+            {
+                GameObject go = _hits[i].gameObject;
+                Canvas c = go != null ? go.GetComponentInParent<Canvas>() : null;
+                if (c == null) continue;
+                return c.rootCanvas != toolbarRoot;
+            }
+            return false;
         }
 
         private static RectTransform ActiveRect(ToolbarControlBase b)
