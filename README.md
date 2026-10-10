@@ -33,9 +33,9 @@ A CharaStudio plugin for Koikatu that keeps the studio's left toolbar usable whe
 | Hotkeys / Scroll up, Scroll down | unbound | Scrolls the toolbar by one row |
 | Debug / Fake buttons | 0 | Adds dummy buttons to test overflow. Keep at 0 for normal use |
 
-## Known issues
+## Known issues and advice
 
-- With KKAPI 1.46 or later, entering the toolbar's *Edit Mode* (Option button, right-click) can push a vanilla button such as Undo one column to the right, because KKAPI also places buttons that are normally hidden. This happens without this plugin too. *Rearrange buttons* in the same menu restores the layout.
+- **Avoid the toolbar's Edit Mode** (Option button, right-click) when you can. We have not found any problem caused by this plugin there, but KKAPI 1.46 and later place buttons that are normally hidden while Edit Mode is on, which can push a vanilla button such as Undo one column to the right (this happens without this plugin too). We can't rule out new conflicts with future KKAPI versions. If the layout gets mixed up, *Rearrange buttons* in the same menu restores it.
 
 ## Build from source
 
