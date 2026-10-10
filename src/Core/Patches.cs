@@ -35,6 +35,7 @@ namespace KK_StudioToolbarScroll.Core
                     finalizer: new HarmonyMethod(typeof(Patches), nameof(AfterUpdate)));
                 harmony.Patch(begin, prefix: new HarmonyMethod(typeof(Patches), nameof(BeforeBeginDrag)));
                 harmony.Patch(end, prefix: new HarmonyMethod(typeof(Patches), nameof(BeforeEndDrag)));
+                Plugin.Trace("patched " + update.DeclaringType.Name + "." + update.Name + ", " + begin.Name + ", " + end.Name);
                 return true;
             }
             catch (Exception e)

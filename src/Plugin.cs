@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using System;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
@@ -19,6 +20,14 @@ namespace KK_StudioToolbarScroll
 
         internal static ManualLogSource Log;
         internal static ToolbarScroller Scroller;
+
+        private static string _lastState;
+
+        /// <summary>Info-level line with a wall-clock time, so it can be matched against a crash report's timestamp.</summary>
+        internal static void Trace(string message)
+        {
+            Log.LogInfo("[" + DateTime.Now.ToString("HH:mm:ss.fff") + "] " + message);
+        }
 
         private ConfigEntry<int> _fakeButtons;
         private ConfigEntry<KeyboardShortcut> _debugUp;
@@ -43,13 +52,14 @@ namespace KK_StudioToolbarScroll
             {
                 Scroller = scroller;
                 scroller.Changed += LogState;
+                Trace("KKAPI toolbar hooks installed");
             }
 
             _debugButtons = new DebugButtons(this);
             _fakeButtons.SettingChanged += (s, e) => _debugButtons.SetCount(_fakeButtons.Value);
             _debugButtons.SetCount(_fakeButtons.Value);
 
-            Log.LogInfo(Name + " " + Version + " loaded");
+            Trace(Name + " " + Version + " loaded, fake buttons " + _fakeButtons.Value);
         }
 
         void Update()
@@ -63,7 +73,10 @@ namespace KK_StudioToolbarScroll
         private static void LogState()
         {
             ToolbarScroller s = Scroller;
-            Log.LogDebug("scroll " + s.Scroll + "/" + s.MaxScroll + ", window " + s.WindowRows + " rows, overflow " + s.Overflowing);
+            string state = "scroll " + s.Scroll + "/" + s.MaxScroll + ", window " + s.WindowRows + " rows, overflow " + s.Overflowing;
+            if (state == _lastState) return;
+            _lastState = state;
+            Trace(state);
         }
     }
 }

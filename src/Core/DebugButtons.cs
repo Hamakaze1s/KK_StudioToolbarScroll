@@ -23,6 +23,7 @@ namespace KK_StudioToolbarScroll.Core
         public void SetCount(int count)
         {
             if (count < 0) count = 0;
+            Plugin.Trace("fake buttons " + _buttons.Count + " -> " + count);
             try
             {
                 while (_buttons.Count < count)

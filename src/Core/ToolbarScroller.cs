@@ -57,6 +57,7 @@ namespace KK_StudioToolbarScroll.Core
         {
             int clamped = Mathf.Clamp(row, 0, MaxScroll);
             if (clamped == _scroll) return;
+            Plugin.Trace("scroll " + _scroll + " -> " + clamped);
             _scroll = clamped;
             Apply();
         }
@@ -65,6 +66,7 @@ namespace KK_StudioToolbarScroll.Core
         public void BeginDrag(Component dragHelper)
         {
             _dragged = dragHelper != null ? dragHelper.GetComponent<RectTransform>() : null;
+            Plugin.Trace("drag begin: " + (dragHelper != null ? dragHelper.name : "?") + ", scroll was " + _scroll);
             if (_applied.Count == 0) return;
             _scroll = 0;
             Apply();
@@ -72,6 +74,7 @@ namespace KK_StudioToolbarScroll.Core
 
         public void EndDrag()
         {
+            Plugin.Trace("drag end");
             _dragged = null;
         }
 
