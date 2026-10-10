@@ -26,7 +26,7 @@ The studio's left toolbar with more buttons than fit. Left: first page. Right: s
 
 ## Installation
 
-1. Download the zip from the latest release and extract it into your Koikatu folder so that `KK_StudioToolbarScroll.dll` ends up in `BepInEx/plugins`.
+1. Download the zip from the [latest release](https://github.com/Hamakaze1s/KK_StudioToolbarScroll/releases/latest) (under **Assets**; do not use the green *Code* button) and extract it into your Koikatu folder so that `KK_StudioToolbarScroll.dll` ends up in `BepInEx/plugins`.
 2. Start CharaStudio. No other setup is needed.
 
 ## Settings (F1 → KK_StudioToolbarScroll)

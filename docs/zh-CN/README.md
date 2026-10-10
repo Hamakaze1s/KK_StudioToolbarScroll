@@ -26,7 +26,7 @@
 
 ## 安装
 
-1. 从最新发布页下载 zip，解压到恋活目录，使 `KK_StudioToolbarScroll.dll` 位于 `BepInEx/plugins` 中。
+1. 从[最新发布页](https://github.com/Hamakaze1s/KK_StudioToolbarScroll/releases/latest)的 **Assets** 下载 zip（不要点绿色的 *Code* 按钮），解压到恋活目录，使 `KK_StudioToolbarScroll.dll` 位于 `BepInEx/plugins` 中。
 2. 启动 CharaStudio，不需要其他设置。
 
 ## 设置（F1 → KK_StudioToolbarScroll）

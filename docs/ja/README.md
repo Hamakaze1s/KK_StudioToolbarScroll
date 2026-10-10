@@ -26,7 +26,7 @@
 
 ## インストール
 
-1. 最新リリースから zip をダウンロードし、コイカツのフォルダに展開して、`KK_StudioToolbarScroll.dll` が `BepInEx/plugins` に入るようにします。
+1. [最新リリース](https://github.com/Hamakaze1s/KK_StudioToolbarScroll/releases/latest)の **Assets** から zip をダウンロードし（緑の *Code* ボタンは使わないでください）、コイカツのフォルダに展開して、`KK_StudioToolbarScroll.dll` が `BepInEx/plugins` に入るようにします。
 2. CharaStudio を起動します。ほかの設定は不要です。
 
 ## 設定（F1 → KK_StudioToolbarScroll）
