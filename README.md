@@ -6,7 +6,7 @@ A CharaStudio plugin for Koikatu that keeps the studio's left toolbar usable whe
 
 > **Status:** in development (0.0.x), not released yet. Tested in game with KKAPI 1.45.1 and 1.48.1.
 
-<img src="docs/images/toolbar-scroll.png" width="200" alt="The toolbar with 40 buttons: first page (left), scrolled to the top (right)">
+<img src="docs/images/toolbar-scroll.png" width="200" alt="The toolbar with more buttons than fit: first page (left), scrolled to the top (right)">
 
 The studio's left toolbar with more buttons than fit. Left: first page. Right: scrolled to the top, so ▲ is greyed out. The line above Undo separates the fixed buttons from the ones that scroll. (The coloured squares are the debug option's dummy buttons.)
 
