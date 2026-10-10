@@ -36,6 +36,7 @@ A CharaStudio plugin for Koikatu that keeps the studio's left toolbar usable whe
 ## Known issues and advice
 
 - **Avoid the toolbar's Edit Mode** (Option button, right-click) when you can. We have not found any problem caused by this plugin there, but KKAPI 1.46 and later place buttons that are normally hidden while Edit Mode is on, which can push a vanilla button such as Undo one column to the right (this happens without this plugin too). We can't rule out new conflicts with future KKAPI versions. If the layout gets mixed up, *Rearrange buttons* in the same menu restores it.
+- **Please don't drag the game's own buttons** (Undo, Redo, Camera, ...). The plugin assumes they sit at the bottom. KKAPI fills the cells they leave behind with other buttons, and the line between fixed and scrolling rows moves with them.
 
 ## Build from source
 
