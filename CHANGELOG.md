@@ -4,6 +4,11 @@ All notable changes to this project are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-10
+
+### Changed
+- Minimum KKAPI lowered from 1.45 to 1.43, the first version with the toolbar manager. 1.43 and 1.44 have the same toolbar code as 1.45.1 (compared by decompiling) but were not tested in game.
+
 ## [0.1.0] - 2026-10-10
 
 ### Added

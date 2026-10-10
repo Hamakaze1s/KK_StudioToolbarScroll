@@ -4,7 +4,7 @@
 
 A CharaStudio plugin for Koikatu that keeps the studio's left toolbar usable when too many plugins have added buttons to it. Buttons that no longer fit on the screen are reached with ▲▼ buttons instead of being lost off the top edge.
 
-> **Status:** 0.1.0, first release. Tested in game with KKAPI 1.45.1 and 1.48.1.
+> **Status:** 0.1.1. Tested in game with KKAPI 1.45.1 and 1.48.1.
 
 <img src="docs/images/toolbar-scroll.png" width="200" alt="The toolbar with more buttons than fit: first page (left), scrolled to the top (right)">
 
@@ -22,7 +22,7 @@ The studio's left toolbar with more buttons than fit. Left: first page. Right: s
 ## Requirements
 
 - Koikatu **CharaStudio**, BepInEx 5.4.x
-- KKAPI (IllusionModdingAPI) 1.45 or later
+- KKAPI (IllusionModdingAPI) 1.43 or later. 1.43 and 1.44 have the same toolbar code as 1.45.1 but have not been tested in game; older versions have no toolbar manager and are not supported
 
 ## Installation
 
