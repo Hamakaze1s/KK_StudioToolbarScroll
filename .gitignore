@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+*.user
+GameDir.props
+# agent guidance and maintainer notes (local only)
+AGENTS.md
+CLAUDE.md
+PLAN.md
+notes/
