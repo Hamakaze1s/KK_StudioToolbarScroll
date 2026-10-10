@@ -184,6 +184,17 @@ namespace KK_StudioToolbarScroll.Core
                 }
             }
 
+            // Buttons the user dragged out of the two-column strip are free-floating: pinned, never scrolled or hidden.
+            for (int i = _scrollable.Count - 1; i >= 0; i--)
+            {
+                int col = Mathf.RoundToInt((_scrollable[i].anchoredPosition.x - minX) / RowStep);
+                if (col < 0 || col > 1)
+                {
+                    _scrollable.RemoveAt(i);
+                    _scrollableRows.RemoveAt(i);
+                }
+            }
+
             // Third-party buttons at or below the highest vanilla row are pinned too.
             int maxRow = int.MinValue;
             for (int i = _scrollable.Count - 1; i >= 0; i--)
