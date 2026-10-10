@@ -11,7 +11,7 @@ using UnityEngine;
 namespace KK_StudioToolbarScroll
 {
     [BepInPlugin(Guid, Name, Version)]
-    [BepInDependency(KKAPI.KoikatuAPI.GUID, "1.43")]
+    [BepInDependency(KKAPI.KoikatuAPI.GUID, "1.45")]
     [BepInProcess("CharaStudio")]
     public sealed class Plugin : BaseUnityPlugin
     {
