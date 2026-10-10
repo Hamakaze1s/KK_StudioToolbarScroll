@@ -31,10 +31,12 @@ namespace KK_StudioToolbarScroll
         }
 
         private ConfigEntry<int> _fakeButtons;
-        private ConfigEntry<KeyboardShortcut> _debugUp;
-        private ConfigEntry<KeyboardShortcut> _debugDown;
+        private ConfigEntry<UiLanguage> _language;
+        private ConfigEntry<KeyboardShortcut> _scrollUp;
+        private ConfigEntry<KeyboardShortcut> _scrollDown;
         private DebugButtons _debugButtons;
         private ScrollDivider _divider;
+        private ScrollArrows _arrows;
 
         void Awake()
         {
@@ -44,10 +46,12 @@ namespace KK_StudioToolbarScroll
             _fakeButtons = Config.Bind("Debug", "Fake buttons", 0,
                 new ConfigDescription("Adds this many dummy buttons to the left toolbar to test overflow. Keep at 0 for normal use.",
                     new AcceptableValueRange<int>(0, 60)));
-            _debugUp = Config.Bind("Debug", "Scroll up key", new KeyboardShortcut(KeyCode.Keypad8),
-                "Temporary: scrolls the toolbar one row until the on-screen arrows exist");
-            _debugDown = Config.Bind("Debug", "Scroll down key", new KeyboardShortcut(KeyCode.Keypad2),
-                "Temporary: scrolls the toolbar one row until the on-screen arrows exist");
+            _language = Config.Bind("General", "Language", UiLanguage.Auto, "UI language / 界面语言");
+            _scrollUp = Config.Bind("Hotkeys", "Scroll up", KeyboardShortcut.Empty,
+                "Scrolls the toolbar up by one row. Unbound by default / 工具栏向上滚动一行，默认未绑定");
+            _scrollDown = Config.Bind("Hotkeys", "Scroll down", KeyboardShortcut.Empty,
+                "Scrolls the toolbar down by one row. Unbound by default / 工具栏向下滚动一行，默认未绑定");
+            L.SetLanguage(_language.Value);
 
             var scroller = new ToolbarScroller();
             if (Patches.Install(scroller))
@@ -55,6 +59,12 @@ namespace KK_StudioToolbarScroll
                 Scroller = scroller;
                 scroller.Changed += LogState;
                 _divider = new ScrollDivider(scroller);
+                _arrows = new ScrollArrows(scroller);
+                _language.SettingChanged += (s, e) =>
+                {
+                    L.SetLanguage(_language.Value);
+                    _arrows.Refresh();
+                };
                 Trace("KKAPI toolbar hooks installed");
             }
 
@@ -69,8 +79,8 @@ namespace KK_StudioToolbarScroll
         {
             if (Scroller == null) return;
             Scroller.Tick();
-            if (_debugUp.Value.IsDown()) Scroller.ScrollBy(1);
-            if (_debugDown.Value.IsDown()) Scroller.ScrollBy(-1);
+            if (_scrollUp.Value.IsDown()) Scroller.ScrollBy(1);
+            if (_scrollDown.Value.IsDown()) Scroller.ScrollBy(-1);
         }
 
         private static void LogState()

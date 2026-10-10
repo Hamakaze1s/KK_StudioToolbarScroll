@@ -41,7 +41,7 @@ namespace KK_StudioToolbarScroll.Core
         private int _scroll;
 
         /// <summary>Rows at the top of the window kept free for the arrow controls.</summary>
-        public int ReserveRows = 0;
+        public int ReserveRows = 1;
 
         public bool Overflowing { get; private set; }
         public int Scroll { get { return _scroll; } }
@@ -51,6 +51,9 @@ namespace KK_StudioToolbarScroll.Core
 
         /// <summary>Screen-pixel line between the pinned rows and the scrolling rows; valid while <see cref="Overflowing"/>.</summary>
         public float DividerLeft, DividerY, DividerWidth;
+
+        /// <summary>Screen-pixel centres of the two reserved arrow cells and the on-screen size scale of a button.</summary>
+        public float ArrowLeftX, ArrowRightX, ArrowY, ButtonScale;
 
         /// <summary>Diagnostics: highest usable row, highest pinned row, highest row of any scrollable button.</summary>
         public int TopRow, PinnedMax, MaxRow;
@@ -229,6 +232,10 @@ namespace KK_StudioToolbarScroll.Core
                 return;
             }
             Overflowing = true;
+            ArrowLeftX = col0X;
+            ArrowRightX = col1X;
+            ArrowY = refCenterY + (windowTop + 1) * rowPx;
+            ButtonScale = _lastScale;
             DividerLeft = col0X - refW * 0.5f;
             DividerWidth = (col1X - col0X) + refW;
             DividerY = refTop + pinnedMax * rowPx + (RowStep - refW / _lastScale) * 0.5f * _lastScale;
