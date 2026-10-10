@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using KKAPI.Studio.UI.Toolbars;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace KK_StudioToolbarScroll.Core
 {
@@ -331,8 +332,34 @@ namespace KK_StudioToolbarScroll.Core
             return to + 1;
         }
 
+        private GraphicRaycaster _mainMenu;
+
+        /// <summary>
+        /// The studio's main menu must stay reachable whichever canvas is drawn on top: some plugin or game code
+        /// raises the toolbar canvas above it at times. Test it directly instead of through the event system's
+        /// depth order.
+        /// </summary>
+        private bool HitsMainMenu(Vector2 point)
+        {
+            if (_mainMenu == null)
+            {
+                GameObject go = GameObject.Find("StudioScene/Canvas Main Menu");
+                _mainMenu = go != null ? go.GetComponent<GraphicRaycaster>() : null;
+                if (_mainMenu == null) return false;
+            }
+            _pointer.position = point;
+            _hits.Clear();
+            _mainMenu.Raycast(_pointer, _hits);
+            return _hits.Count > 0;
+        }
+
         private bool IsCovered(EventSystem es, Canvas toolbarRoot, float x, float y)
         {
+            if (HitsMainMenu(new Vector2(x, y)))
+            {
+                if (CoveredBy == "-") CoveredBy = "Canvas Main Menu (direct)";
+                return true;
+            }
             _pointer.position = new Vector2(x, y);
             _hits.Clear();
             es.RaycastAll(_pointer, _hits);
